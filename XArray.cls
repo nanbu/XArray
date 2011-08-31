@@ -16,7 +16,7 @@ Private MyCapacityStep As Long
 Private MyCompareMode As VbCompareMethod
 
 Private Sub Class_Initialize()
-    MyCapacityStep = 32
+    MyCapacityStep = 1024
     MyCount = 0
     MyCapacity = MyCapacityStep
     MyCompareMode = vbBinaryCompare
@@ -40,6 +40,9 @@ Private Function CountDown()
     MyCount = MyCount - 1
     If MyCount + MyCapacityStep <= MyCapacity Then
         MyCapacity = MyCapacity - MyCapacityStep
+        If MyCapacity <= MyCapacityStep Then
+            MyCapacity = MyCapacityStep
+        End If
         ReDim Preserve MyArray(MyCapacity - 1)
     End If
 End Function
@@ -69,19 +72,19 @@ Public Property Get Item(Index As Long) As Variant
     End If
 End Property
 
-Property Let Item(Index As Long, Val)
+Property Let Item(Index As Long, Value)
     If Index >= MyCount Then
-        Err.Raise 9, "XArray.Item(Index)"
+        Err.Raise 9, "XArray.Item(Index, Value)"
     Else
-        MyArray(Index) = Val
+        MyArray(Index) = Value
     End If
 End Property
 
-Property Set Item(Index As Long, Val)
+Property Set Item(Index As Long, Value)
     If Index >= MyCount Then
-        Err.Raise 9, "XArray.Item(index)"
+        Err.Raise 9, "XArray.Item(Index, Value)"
     Else
-        Set MyArray(Index) = Val
+        Set MyArray(Index) = Value
     End If
 End Property
 
@@ -131,16 +134,16 @@ Property Get Exists(Val, Optional Comparer) As Boolean
     Exists = (IndexOf(Val, Comparer) >= 0)
 End Property
 
-Function Insert(Index As Long, Val As Variant)
-    If Index >= MyCount Then
-        Err.Raise 9, "XArray.Insert(index)"
+Function Insert(Index As Long, Value As Variant)
+    If Index > MyCount Or Index < 0 Then
+        Err.Raise 9, "XArray.Insert(Index, Value)"
     Else
         Call CountUp
         Dim i As Long
         For i = MyCount - 1 To Index + 1 Step -1
             Call SetValue(MyArray(i), MyArray(i - 1))
         Next
-        Call SetValue(MyArray(Index), Val)
+        Call SetValue(MyArray(Index), Value)
     End If
 End Function
 
@@ -149,6 +152,9 @@ Function Remove(Index As Long)
         Err.Raise 9, "XArray.Remove(index)"
     Else
         Dim i As Long
+        If IsObject(MyArray(i)) Then
+            Set MyArray(i) = Nothing
+        End If
         For i = Index To MyCount - 2
             Call SetValue(MyArray(i), MyArray(i + 1))
         Next
@@ -157,6 +163,10 @@ Function Remove(Index As Long)
 End Function
 
 Function Exchange(Index1 As Long, Index2 As Long)
+    If Index1 < 0 Or Index1 >= MyCount Or Index2 < 0 Or Index2 >= MyCount Then
+        Err.Raise 9, "XArray.Exchange(Index1, Index2)"
+        Exit Function
+    End If
     Dim Temp
     Call SetValue(Temp, MyArray(Index1))
     Call SetValue(MyArray(Index1), MyArray(Index2))
@@ -240,48 +250,6 @@ Function Clone() As XArray
         Result.Add MyArray(i)
     Next
     Set Clone = Result
-End Function
-
-Function Equals(Target As XArray) As Boolean
-    Dim Result As Boolean
-    Result = True
-    
-    If Target Is Me Then
-        Result = True
-    Else
-        Dim i As Long
-        Dim TheCount As Long
-        TheCount = MyCount
-        If TheCount = Target.Count Then
-            Result = True
-            For i = 0 To TheCount - 1
-                If IsObject(MyArray(i)) Then
-                    If Not IsObject(Target.Item(i)) Then
-                        Result = False
-                        Exit For
-                    End If
-                    If Not MyArray(i).IsEqual(Target.Item(i)) Then
-                        Result = False
-                        Exit For
-                    End If
-                Else
-                    If Not IsObject(Target.Item(i)) Then
-                        Result = False
-                        Exit For
-                    Else
-                        If MyArray(i) <> Target.Item(i) Then
-                            Result = False
-                            Exit For
-                        End If
-                    End If
-                End If
-            Next
-        Else
-            Result = False
-        End If
-    End If
-    
-    Equals = Result
 End Function
 
 Property Let CompareMode(Mode As VbCompareMethod)
