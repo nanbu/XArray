@@ -2,6 +2,10 @@ Attribute VB_Name = "XArrayTest"
 Option Explicit
 
 Sub Test()
+    Dim StartTime As Currency
+    Dim EndTime As Currency
+    Debug.Print "**** XArrayTest.Test ****"
+    StartTime = Timer()
     Call TestAdd
     Call TestInsert
     Call TestRemove
@@ -14,6 +18,8 @@ Sub Test()
     Call TestReverse
     Call TestClone
     Call TestItems
+    EndTime = Timer() - StartTime
+    Debug.Print "Total: " & EndTime & " seconds. "
 End Sub
 
 Sub TestAdd()
@@ -143,7 +149,7 @@ Sub TestRemove()
     EndTime = Timer() - StartTime
     Debug.Assert a.Count = 0
     Debug.Print EndTime
-    Debug.Assert EndTime < 1
+    Debug.Assert EndTime < 10
 End Sub
 
 Sub TestItem()
@@ -187,7 +193,7 @@ Sub TestItem()
     EndTime = Timer() - StartTime
     Debug.Assert b.Count = Count
     Debug.Print EndTime
-    Debug.Assert EndTime < 1
+    Debug.Assert EndTime < 10
 End Sub
 
 Sub TestCount()
@@ -277,7 +283,7 @@ Sub TestExists()
     EndTime = Timer() - StartTime
     
     Debug.Print EndTime
-    Debug.Assert EndTime < 1
+    Debug.Assert EndTime < 10
 End Sub
 
 Sub TestIndexOf()
@@ -354,7 +360,7 @@ Sub TestIndexOf()
     EndTime = Timer() - StartTime
     
     Debug.Print EndTime
-    Debug.Assert EndTime < 1
+    Debug.Assert EndTime < 10
 End Sub
 
 Sub TestExchange()
@@ -483,6 +489,22 @@ Sub TestSort()
     Dim c As New XArray
     c.Sort
     Debug.Assert c.Count = 0
+    
+    Dim d As New XArray
+    Dim i As Long
+    Dim Count As Long
+    Dim StartTime As Currency
+    Dim EndTime As Currency
+    
+    Count = 10000
+    For i = Count - 1 To 0 Step -1
+        d.Add i
+    Next
+    StartTime = Timer()
+    d.Sort
+    EndTime = Timer() - StartTime
+    Debug.Print EndTime
+    Debug.Assert EndTime < 10
 End Sub
 
 Sub TestReverse()
@@ -578,7 +600,7 @@ Sub TestItems()
     Values = b.Items
     EndTime = Timer() - StartTime
     Debug.Print EndTime
-    Debug.Assert EndTime < 1
+    Debug.Assert EndTime < 10
     Debug.Assert IsArray(Values)
     Debug.Assert UBound(Values) = Count - 1
 End Sub

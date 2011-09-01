@@ -204,7 +204,8 @@ Private Function QuickSort(Target, Min As Long, Max As Long, Optional Comparer)
     Dim Index2 As Long
     Dim Temp
 
-    Middle = (Min + Max) \ 2
+    'Middle = (Min + Max) \ 2
+    Middle = Int((Min + Max) / 2)
     Call SetValue(Temp, Target(Middle))
     Call SetValue(Target(Middle), Target(Min))
     Index2 = Min
