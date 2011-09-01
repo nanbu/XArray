@@ -59,9 +59,9 @@ Property Get Count() As Long
     Count = MyCount
 End Property
 
-Function Add(Val)
+Function Add(Value)
     Call CountUp
-    Call SetValue(MyArray(MyCount - 1), Val)
+    Call SetValue(MyArray(MyCount - 1), Value)
 End Function
 
 Public Property Get Item(Index As Long) As Variant
@@ -99,21 +99,21 @@ Property Get Items() As Variant
     Items = Result
 End Property
 
-Property Get IndexOf(Val, Optional Comparer) As Long
+Property Get IndexOf(Value, Optional Comparer) As Long
     Dim Result As Long
     Result = -1
     Dim i As Long
     If IsMissing(Comparer) Then
         If MyCompareMode = vbTextCompare Then
             For i = 0 To MyCount - 1
-                If StrComp(MyArray(i), Val, vbTextCompare) = 0 Then
+                If StrComp(MyArray(i), Value, vbTextCompare) = 0 Then
                     Result = i
                     Exit For
                 End If
             Next
         Else
             For i = 0 To MyCount - 1
-                If MyArray(i) = Val Then
+                If MyArray(i) = Value Then
                     Result = i
                     Exit For
                 End If
@@ -121,7 +121,7 @@ Property Get IndexOf(Val, Optional Comparer) As Long
         End If
     Else
         For i = 0 To MyCount - 1
-            If Comparer.Compare(MyArray(i), Val) = 0 Then
+            If Comparer.Compare(MyArray(i), Value) = 0 Then
                 Result = i
                 Exit For
             End If
@@ -130,12 +130,12 @@ Property Get IndexOf(Val, Optional Comparer) As Long
     IndexOf = Result
 End Property
 
-Property Get Exists(Val, Optional Comparer) As Boolean
-    Exists = (IndexOf(Val, Comparer) >= 0)
+Property Get Exists(Value, Optional Comparer) As Boolean
+    Exists = (IndexOf(Value, Comparer) >= 0)
 End Property
 
-Function Insert(Index As Long, Value As Variant)
-    If Index > MyCount Or Index < 0 Then
+Function Insert(Index As Long, Value)
+    If Index < 0 Or Index > MyCount Then
         Err.Raise 9, "XArray.Insert(Index, Value)"
     Else
         Call CountUp
@@ -148,8 +148,8 @@ Function Insert(Index As Long, Value As Variant)
 End Function
 
 Function Remove(Index As Long)
-    If Index >= MyCount Then
-        Err.Raise 9, "XArray.Remove(index)"
+    If Index < 0 Or Index >= MyCount Then
+        Err.Raise 9, "XArray.Remove(Index)"
     Else
         Dim i As Long
         If IsObject(MyArray(i)) Then
