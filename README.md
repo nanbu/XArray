@@ -93,7 +93,6 @@ XArrayで管理しているデータをVBAの配列(Array)として取り出し�
 
 	Sub Test
 		Dim Fruits As XArray
-		Dim NumberOfFruits As Long
 		Dim i As Long
 		Set Fruits = New XArray
 		Fruits.Add "Cherry"
