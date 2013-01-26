@@ -29,6 +29,24 @@ Visual Basic EditorよりXArray.clsをインポートしてください。
  6. Sortメソッドでデータを並び替えます。
  7. 任意の順でソートするにはCompareメソッドを備えたカスタムクラスを作り、インスタンスをSortメソッドの引数に指定します。
 
+## サンプル
+
+	Sub Test
+		Dim Fruits As XArray
+		Dim i As Long
+		Set Fruits = New XArray
+		Fruits.Add "Cherry"
+		Fruits.Add "Apple"
+		Fruits.Add "Banana"
+		Fruits.Sort
+		For i = 0 To Fruits.Count - 1
+			Fruits.Item(i) = (i + 1) & ": " & Fruits.Item(i)
+		Next
+		MsgBox Fruits.Item(0) '1: Apple
+		MsgBox Fruits.Item(1) '2: Banana
+		MsgBox Fruits.Item(2) '3: Cherry
+	End Sub
+
 ## API
 
 	Add(Value) メソッド
@@ -91,21 +109,3 @@ XArrayで管理しているデータをVBAの配列(Array)として取り出し�
    * Compareメソッドを備えたクラスのインスタンスであること。
    * Compareメソッドは引数を2つとること。
    * Compareメソッドは2つの引数を比較し、1つ目が2つ目よりも順序が前であれば0未満の値（通常は-1）を、1つ目が2つ目よりも順序が後であれば0より大きい値（通常は1）を、1つ目と2つ目が順序は同じである、または、同値であると判定すれば0を戻り値とすること。
-
-## サンプル
-
-	Sub Test
-		Dim Fruits As XArray
-		Dim i As Long
-		Set Fruits = New XArray
-		Fruits.Add "Cherry"
-		Fruits.Add "Apple"
-		Fruits.Add "Banana"
-		Fruits.Sort
-		For i = 0 To Fruits.Count - 1
-			Fruits.Item(i) = (i + 1) & ": " & Fruits.Item(i)
-		Next
-		MsgBox Fruits.Item(0) '1: Apple
-		MsgBox Fruits.Item(1) '2: Banana
-		MsgBox Fruits.Item(2) '3: Cherry
-	End Sub

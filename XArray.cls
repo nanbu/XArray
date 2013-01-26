@@ -151,10 +151,10 @@ Function Remove(Index As Long)
     If Index < 0 Or Index >= MyCount Then
         Err.Raise 9, "XArray.Remove(Index)"
     Else
-        Dim i As Long
-        If IsObject(MyArray(i)) Then
-            Set MyArray(i) = Nothing
+        If IsObject(MyArray(Index)) Then
+            Set MyArray(Index) = Nothing
         End If
+        Dim i As Long
         For i = Index To MyCount - 2
             Call SetValue(MyArray(i), MyArray(i + 1))
         Next
